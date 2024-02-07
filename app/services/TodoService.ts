@@ -1,24 +1,50 @@
+// TodoService.ts
+
 import { Todo } from "../models/Todo";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
+let cachedTodos: Todo[] | null = null; // キャッシュ用の変数
 
 export const getTodos = async () => {
-    //TODO: API URL設定
-    const url = API_URL + "";
+    if (cachedTodos) {
+        return cachedTodos; // キャッシュがあればそれを返す
+    }
+
+    const url = `${API_URL}/data/todo.json`;
     try {
         const response = await fetch(url);
         if (response.ok) {
-            return await response.json();
+            const todos = await response.json();
+            cachedTodos = todos; // データをキャッシュ
+            return todos;
         }
     } catch (error) {
-        console.error(error)
+        console.error(error);
     }
 }
 
 export const postTodos = async (todos: Todo[]) => {
     if (!todos) return;
-    //TODO: API URL設定
-    const url = API_URL + "";
+
+    const url = `${API_URL}/data/todo.json`;
     const data = JSON.stringify(todos);
-    //TODO: APIで保存し、データを返す
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: data,
+        });
+
+        if (response.ok) {
+            console.log('TODOs posted successfully');
+            cachedTodos = todos; // データをキャッシュ
+        } else {
+            console.error('Failed to post TODOs');
+        }
+    } catch (error) {
+        console.error(error);
+    }
 }

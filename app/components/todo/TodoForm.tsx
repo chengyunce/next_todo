@@ -1,4 +1,4 @@
-"use client"
+// "use client"
 
 import { useState } from "react";
 import ClickButton from "@/app/components/ClickButton";
@@ -7,7 +7,7 @@ import TagsInput from "@/app/components/tag/TagsInput";
 
 interface TodoFormProps {
     onSaveTodo: (value: string, tags: string[]) => void;
-    autoCompleteTags: string[]
+    autoCompleteTags: string[];
 }
 
 const TodoForm = ({
@@ -28,10 +28,16 @@ const TodoForm = ({
             <Input
                 value={inputValue}
                 onChange={setInputValue}
-                placeholder="Enter Todo..." />
+                placeholder="Todoを入力してください..." />
+
+            <TagsInput
+                tags={tags}
+                setTags={setTags}
+                autoCompleteTags={autoCompleteTags}
+                placeholder="タグを入力してください..." />
 
             <ClickButton
-                label="Add"
+                label="追加"
                 onClick={addClickHandler}
                 disabled={!inputValue} />
         </div>
